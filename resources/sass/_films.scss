@@ -1,0 +1,31 @@
+.flex{
+    display: flex;
+    .film{
+        &:hover .title{
+            opacity: 1;
+        }
+        &:hover img{
+            filter: blur(1px) grayscale(100%);
+    
+        }
+        margin: 10px;
+        width: 200px;
+        height: 310px;
+        background-color: gray;
+        position: relative;
+        img{
+            width:200px;
+            filter: grayscale(0%);
+            
+        }
+        .title{
+            opacity: 0;
+            font-size: 20px;
+            color: white;
+            position: absolute;
+            top: 120px;
+           left: 30px;
+        }
+    }
+       
+}
