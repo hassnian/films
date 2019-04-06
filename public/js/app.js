@@ -65357,6 +65357,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _components_Form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Form */ "./resources/js/components/Form.js");
 /* harmony import */ var _components_Film__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Film */ "./resources/js/components/Film.js");
+/* harmony import */ var _components_FilmInfo__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/FilmInfo */ "./resources/js/components/FilmInfo.js");
+/* harmony import */ var _components_Stats__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/Stats */ "./resources/js/components/Stats.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -65374,6 +65376,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
 
 
 
@@ -65408,7 +65412,11 @@ function (_Component) {
       }, "Stats")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         exact: true,
         path: "/films/:idfilm",
-        component: _components_Form__WEBPACK_IMPORTED_MODULE_3__["default"]
+        component: _components_FilmInfo__WEBPACK_IMPORTED_MODULE_5__["default"]
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        exact: true,
+        path: "/stats",
+        component: _components_Stats__WEBPACK_IMPORTED_MODULE_6__["default"]
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         exact: true,
         path: "/form",
@@ -65416,7 +65424,7 @@ function (_Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         exact: true,
         path: "/",
-        component: _components_Film__WEBPACK_IMPORTED_MODULE_4__["default"]
+        component: _components_Stats__WEBPACK_IMPORTED_MODULE_6__["default"]
       })));
     }
   }]);
@@ -65597,7 +65605,7 @@ function (_Component) {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "container flex"
+        className: "flex"
       }, this.state.list);
     }
   }]);
@@ -65608,16 +65616,16 @@ function (_Component) {
 
 /***/ }),
 
-/***/ "./resources/js/components/Form.js":
-/*!*****************************************!*\
-  !*** ./resources/js/components/Form.js ***!
-  \*****************************************/
-/*! exports provided: Form, default */
+/***/ "./resources/js/components/FilmInfo.js":
+/*!*********************************************!*\
+  !*** ./resources/js/components/FilmInfo.js ***!
+  \*********************************************/
+/*! exports provided: FilmInfo, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Form", function() { return Form; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FilmInfo", function() { return FilmInfo; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -65639,42 +65647,235 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
+var FilmInfo =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(FilmInfo, _Component);
+
+  function FilmInfo() {
+    var _this;
+
+    _classCallCheck(this, FilmInfo);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(FilmInfo).call(this));
+    _this.state = {
+      film: undefined,
+      filmid: undefined,
+      filmhtml: undefined
+    };
+    return _this;
+  }
+
+  _createClass(FilmInfo, [{
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      var _this2 = this;
+
+      axios.get("/api/film").then(function (response) {
+        _this2.setState({
+          filmid: _this2.props.match.params.idfilm
+        });
+
+        _this2.setState({
+          film: response.data.filter(function (film) {
+            return film.id == _this2.state.filmid;
+          })[0]
+        });
+
+        _this2.renderHtml();
+      });
+    }
+  }, {
+    key: "renderHtml",
+    value: function renderHtml() {
+      this.setState({
+        filmhtml: react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "film-info"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+          className: "",
+          src: this.state.film.img,
+          alt: ""
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.state.film.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.film.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.state.film.tickets), " tickets available"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "$", this.state.film.amount), "  movie grossing"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "btn btn-primary",
+          onClick: this.buyTicket.bind(this)
+        }, "Buy a ticket"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "btn btn-outline-danger"
+        }, "Delete"))
+      });
+    }
+  }, {
+    key: "buyTicket",
+    value: function buyTicket() {
+      var film = this.state.film;
+      film.amount += 10;
+      film.tickets -= 1;
+      this.setState({
+        film: film
+      });
+      this.renderHtml();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container"
+      }, this.state.filmhtml);
+    }
+  }]);
+
+  return FilmInfo;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+/* harmony default export */ __webpack_exports__["default"] = (FilmInfo);
+
+/***/ }),
+
+/***/ "./resources/js/components/Form.js":
+/*!*****************************************!*\
+  !*** ./resources/js/components/Form.js ***!
+  \*****************************************/
+/*! exports provided: Form, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Form", function() { return Form; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
 var Form =
 /*#__PURE__*/
 function (_Component) {
   _inherits(Form, _Component);
 
   function Form() {
+    var _this;
+
     _classCallCheck(this, Form);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Form).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Form).call(this));
+    _this.state = {
+      title: '',
+      desc: '',
+      img: '',
+      amount: '',
+      tickets: ''
+    };
+    return _this;
   }
 
   _createClass(Form, [{
+    key: "handleTitleChange",
+    value: function handleTitleChange(e) {
+      console.log("asdas");
+      this.setState({
+        title: e.target.value
+      });
+    }
+  }, {
+    key: "handleDescChange",
+    value: function handleDescChange(e) {
+      console.log("asdas");
+      this.setState({
+        desc: e.target.value
+      });
+    }
+  }, {
+    key: "handleImgChange",
+    value: function handleImgChange(e) {
+      console.log("asdas");
+      this.setState({
+        img: e.target.value
+      });
+    }
+  }, {
+    key: "handleAmountChange",
+    value: function handleAmountChange(e) {
+      console.log("asdas");
+      this.setState({
+        amount: e.target.value
+      });
+    }
+  }, {
+    key: "handleTicketsChange",
+    value: function handleTicketsChange(e) {
+      console.log("asdas");
+      this.setState({
+        tickets: e.target.value
+      });
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/film', this.state).then(function (response) {
+        console.log(response);
+      }).then(function (error) {
+        console.log(error);
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container "
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
-        action: ""
+        onSubmit: this.handleSubmit.bind(this)
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "title"
       }, "Title: "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleTitleChange.bind(this),
         type: "text",
         name: "title",
         id: "title"
       }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "desc"
       }, "Description: "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleDescChange.bind(this),
         type: "text",
         name: "desc",
         id: "desc"
       }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "img"
       }, "Img"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleImgChange.bind(this),
         type: "text",
         name: "img",
         id: "img"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "amount"
+      }, "Initial amount of grossing"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleAmountChange.bind(this),
+        type: "text",
+        name: "amount",
+        id: "amount"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "tickets"
+      }, "Tickets"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        onChange: this.handleTicketsChange.bind(this),
+        type: "text",
+        name: "tickets",
+        id: "tickets"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "submit",
         value: "Enviar",
@@ -65686,6 +65887,109 @@ function (_Component) {
   return Form;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 /* harmony default export */ __webpack_exports__["default"] = (Form);
+
+/***/ }),
+
+/***/ "./resources/js/components/Stats.js":
+/*!******************************************!*\
+  !*** ./resources/js/components/Stats.js ***!
+  \******************************************/
+/*! exports provided: Stats, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Stats", function() { return Stats; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var Stats =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(Stats, _Component);
+
+  function Stats() {
+    var _this;
+
+    _classCallCheck(this, Stats);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Stats).call(this));
+    _this.state = {
+      films: []
+    };
+    return _this;
+  }
+
+  _createClass(Stats, [{
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/api/film').then(function (response) {
+        _this2.setState({
+          films: response.data
+        });
+      }).then(function (error) {
+        console.log("Error is :" + error);
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+        className: "table"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Title"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fas fa-yen-sign"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "fas fa-ticket-alt"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        className: "film-table",
+        src: "http://t2.gstatic.com/images?q=tbn:ANd9GcTBHgLHLjhCNTwZp-MYfvMOyI7Iu7PLcR2rgLZek0WwrDM7DjMG",
+        alt: ""
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "transformers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "transformers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "transformers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-danger"
+      }, "Cancel movie"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        className: "film-table",
+        src: "http://t2.gstatic.com/images?q=tbn:ANd9GcTBHgLHLjhCNTwZp-MYfvMOyI7Iu7PLcR2rgLZek0WwrDM7DjMG",
+        alt: ""
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "transformers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "transformers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "transformers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-danger"
+      }, "Cancel movie"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        className: "film-table",
+        src: "http://t2.gstatic.com/images?q=tbn:ANd9GcTBHgLHLjhCNTwZp-MYfvMOyI7Iu7PLcR2rgLZek0WwrDM7DjMG",
+        alt: ""
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "transformers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "transformers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "transformers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-danger"
+      }, "Cancel movie"))))));
+    }
+  }]);
+
+  return Stats;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+/* harmony default export */ __webpack_exports__["default"] = (Stats);
 
 /***/ }),
 

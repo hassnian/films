@@ -18,3 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource('film','Api\FilmController');
+Route::get('/film/buyTicket','Api\FilmController@buyTicket');

@@ -19,6 +19,7 @@ class CreateFilmsTable extends Migration
             $table->text('description');
             $table->string('img');
             $table->integer('tickets');
+            $table->integer('amount');
             $table->timestamps();
         });
     }

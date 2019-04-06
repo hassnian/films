@@ -36,7 +36,15 @@ class FilmController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $film= new Film();
+        $film->title=$request->get('title');
+        $film->description=$request->get('desc');
+        $film->img=$request->get('img');
+        $film->amount=$request->get('amount');
+        $film->tickets=$request->get('tickets');
+
+        $film->save();
+        return $film;
     }
 
     /**
@@ -81,6 +89,7 @@ class FilmController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $film=Film::find($id);
+        $film-destroy();
     }
 }

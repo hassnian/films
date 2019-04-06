@@ -44,7 +44,7 @@ export class Film extends Component {
 
   render() {
     return (
-      <div className="container flex">
+      <div className="flex">
         {this.state.list}
       </div>
     )
